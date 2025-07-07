@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Music Diary</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div class="info-icon" onclick="showInfo()">
+      <i class="fa-solid fa-info-circle"></i>
+    </div>
+
+    <center>
+      <h1>Music Diary</h1>
+
+      <div id="filter-buttons">
+        <button class="filter-button active" onclick="filterRows('All')">All</button>
+        <button class="filter-button" onclick="showRandomSong()">Random</button>
+        <button class="filter-button" onclick="filterRows('Anime')">Anime</button>
+        <button class="filter-button" onclick="filterRows('Game')">Game</button>
+        <button class="filter-button" onclick="filterRows('INST')">Instrumental</button>
+        <button class="filter-button" onclick="filterRows('Piano')">Piano</button>
+        <button class="filter-button" onclick="filterRows('Vocaloid')">Vocaloid</button>
+        <button class="filter-button" onclick="filterRows('CN')">CN</button>
+        <button class="filter-button" onclick="filterRows('EN')">EN</button>
+        <button class="filter-button" onclick="filterRows('IS')">IS</button>
+        <button class="filter-button" onclick="filterRows('JP')">JP</button>
+        <button class="filter-button" onclick="filterRows('KR')">KR</button>
+        <button class="filter-button" onclick="filterRows('SE')">SE</button>
+      </div>
+
+      <table id="music-table"></table>
+    </center>
+
+    <!-- Info Modal -->
+    <div id="info-modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="hideInfo()">&times;</span>
+        <div class="info-content">
+          <center><h2>About</h2></center>
+          <p>Every day, I keep track of one song that captures a moment of my life.</p>
+          
+          <center><h2>Keyboard Shortcuts</h2></center>
+          <ul>
+            <li><strong>R</strong> - Select a random song from the current filter</li>
+            <li><strong>T</strong> - Jump to the top of the page</li>
+            <li><strong>B</strong> - Jump to the bottom of the page</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
