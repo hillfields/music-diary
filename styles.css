@@ -141,12 +141,18 @@ button {
 
 table {
     border-collapse: collapse;
-    margin: 20px 0px 20px 0px;
+    margin: 20px auto;
+    width: 95%;
+    max-width: 1200px;
+    table-layout: fixed;
 }
 
 th, td {
     border: 1px solid #ccc;
     padding: 6px 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 th {
