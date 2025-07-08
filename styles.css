@@ -150,9 +150,27 @@ table {
 th, td {
     border: 1px solid #ccc;
     padding: 6px 12px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    word-wrap: break-word;
+    word-break: break-word;
+    font-size: 11pt;
+}
+
+th:nth-child(1), td:nth-child(1) {
+    width: 20%;
+    min-width: 70px;
+}
+
+th:nth-child(2), td:nth-child(2) {
+    width: 22%;
+    min-width: 80px;
+}
+
+th:nth-child(3), td:nth-child(3) {
+    width: 30%;
+}
+
+th:nth-child(4), td:nth-child(4) {
+    width: 40%;
 }
 
 th {
