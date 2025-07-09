@@ -1,4 +1,6 @@
-// Info modal functions
+let previewElement = null;
+const URL = "https://music-diary-1573b-default-rtdb.firebaseio.com/data/main.json";
+
 function showInfo() {
   const modal = document.getElementById('info-modal');
   modal.style.display = 'block';
@@ -17,12 +19,12 @@ window.onclick = function(event) {
   }
 }
 
-function getLinkIcon(link) {
-  if (link.includes("youtu.be") || (link.includes("youtube.com"))) {
+function getIcon(url) {
+  if (url.includes("youtu.be")) {
     return '<i class="fa-brands fa-youtube"></i>';
-  } else if (link.includes("open.spotify.com")) {
+  } else if (url.includes("open.spotify.com")) {
     return '<i class="fa-brands fa-spotify"></i>';
-  } else if (link.includes("soundcloud.com")) {
+  } else if (url.includes("soundcloud.com")) {
     return '<i class="fa-brands fa-soundcloud"></i>';
   } else {
     return '<i class="fa-solid fa-music"></i>';
@@ -42,16 +44,18 @@ function createTable(data) {
 
   // Rows
   data.forEach((song, index) => {
-    const icon = getLinkIcon(song["Link"]);
+    const icon = getIcon(song["Link"]);
     html += "<tr>";
     html += `<td>${song["Date"].split("T")[0]}</td>`;
     html += `<td>${song["Tags"]}</td>`;
     html += `<td>${song["Artist"]}</td>`;
-    html += `<td>${icon} <a href=${song["Link"]} target="_blank">${song["Song"]}</a></td>`;
+    html += `<td>${icon} <a href=${song["Link"]} target="_blank" class="preview-link" data-url="${song["Link"]}">${song["Song"]}</a></td>`;
     html += "</tr>";
   })
 
   table.innerHTML = html;
+
+  addPreviewEvents();
 }
 
 function filterRows(tag) {
@@ -123,10 +127,174 @@ function showRandomSong() {
   // Remove classes after fade completes
   setTimeout(() => {
     randomRow.classList.remove("random-highlight", "fade-out");
-  }, 3000);
+  }, 2500);
 }
 
-const URL = "https://music-diary-1573b-default-rtdb.firebaseio.com/data/main.json";
+function addPreviewEvents() {
+  const links = document.querySelectorAll('.preview-link');
+  
+  links.forEach(link => {
+    let previewTimeout;
+    
+    // Show preview when mouse hovers over the link
+    link.addEventListener('mouseenter', function(e) {
+      const url = this.getAttribute('data-url');
+      previewTimeout = setTimeout(() => {
+        showPreview(url, e);
+      }, 200); // 200ms delay before showing preview
+    });
+    
+    // Remove preview when mouse hovers away from the link
+    link.addEventListener('mouseleave', function() {
+      clearTimeout(previewTimeout);
+      if (previewElement) {
+        hidePreview();
+      }
+    });
+  });
+}
+
+function showPreview(url, event) {  
+  // Remove existing preview
+  hidePreview();
+  
+  // Create preview element
+  previewElement = document.createElement('div');
+  previewElement.className = 'link-preview';
+  previewElement.innerHTML = `
+    <div class="preview-content">
+      <div class="preview-loading">Loading preview...</div>
+    </div>
+  `;
+  
+  // Position the preview to the left of the song titles
+  const rect = event.target.getBoundingClientRect();
+  previewElement.style.left = (rect.left - 365) + 'px';
+  previewElement.style.top = rect.top + 'px';
+  
+  document.body.appendChild(previewElement);
+  
+  // Try to get preview image
+  getPreviewImage(url, previewElement);
+}
+
+function hidePreview() {
+  if (previewElement) {
+    previewElement.remove();
+    previewElement = null;
+  }
+}
+
+function getPreviewImage(url, previewElement) {
+  if (url.includes('youtube.com') || url.includes('youtu.be')) {
+    getYouTubePreview(url, previewElement);
+  } else if (url.includes('open.spotify.com')) {
+    getSpotifyPreview(url, previewElement);
+  } else if (url.includes('soundcloud.com')) {
+    getSoundCloudPreview(url, previewElement);
+  } else {
+    // For other links, show a generic preview
+    previewElement.innerHTML = `
+      <div class="preview-content">
+        <div class="preview-fallback">Preview not available</div>
+      </div>
+    `;
+  }
+}
+
+function getYouTubePreview(url, previewElement) {
+  const videoId = extractYouTubeId(url);
+  
+  if (videoId) {
+    const thumbnailUrl = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
+    const img = new Image();
+
+    // Show YouTube thumbnail
+    img.onload = function() {
+      previewElement.innerHTML = `
+        <div class="preview-content">
+          <img src="${thumbnailUrl}" alt="YouTube thumbnail" style="max-width: 300px; max-height: 200px;">
+        </div>
+      `;
+    };
+
+    // Show fallback (preview not available) if image could not be loaded
+    img.onerror = function() {
+      previewElement.innerHTML = `
+        <div class="preview-content">
+          <div class="preview-fallback">YouTube preview not available</div>
+        </div>
+      `;
+    };
+
+    img.src = thumbnailUrl;
+  } else {
+    previewElement.innerHTML = `
+      <div class="preview-content">
+        <div class="preview-fallback">YouTube preview not available</div>
+      </div>
+    `;
+  }
+}
+
+function extractYouTubeId(url) {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? match[2] : null;
+}
+
+function getSpotifyPreview(url, previewElement) {
+  // Get artwork from Spotify
+  const oembedUrl = `https://open.spotify.com/oembed?url=${encodeURIComponent(url)}`;
+  
+  fetch(oembedUrl)
+    .then(response => response.json())
+    .then(data => {
+      if (data.thumbnail_url) {
+        previewElement.innerHTML = `
+          <div class="preview-content">
+            <img src="${data.thumbnail_url}" alt="Spotify art cover" style="max-width: 300px; max-height: 200px;">
+          </div>
+        `;
+      } else {
+        throw new Error('No art cover available');
+      }
+    })
+    .catch(() => {
+      previewElement.innerHTML = `
+        <div class="preview-content">
+          <div class="preview-fallback">Spotify preview not available</div>
+        </div>
+      `;
+    });
+}
+
+function getSoundCloudPreview(url, previewElement) {
+  // Get artwork from SoundCloud
+  const oembedUrl = `https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(url)}`;
+  console.log(encodeURIComponent(oembedUrl));
+  
+  fetch(oembedUrl)
+    .then(response => response.json())
+    .then(data => {
+      if (data.thumbnail_url) {
+        previewElement.innerHTML = `
+          <div class="preview-content">
+            <img src="${data.thumbnail_url}" alt="SoundCloud art cover" style="max-width: 300px; max-height: 200px;">
+          </div>
+        `;
+      } else {
+        throw new Error('No art cover available');
+      }
+    })
+    .catch(() => {
+      previewElement.innerHTML = `
+        <div class="preview-content">
+          <div class="preview-fallback">SoundCloud preview not available</div>
+        </div>
+      `;
+    });
+}
 
 fetch(URL)
   .then((res) => res.json())
