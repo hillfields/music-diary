@@ -26,6 +26,8 @@ function getIcon(url) {
     return '<i class="fa-brands fa-spotify"></i>';
   } else if (url.includes("soundcloud.com")) {
     return '<i class="fa-brands fa-soundcloud"></i>';
+  } else if (url.includes("bilibili.com")) {
+    return '<i class="fa-brands fa-bilibili"></i>';
   } else {
     return '<i class="fa-solid fa-music"></i>';
   }
