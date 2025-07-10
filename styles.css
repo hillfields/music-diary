@@ -108,7 +108,9 @@ button {
 }
 
 #filter-buttons {
-    margin: 20px 0;
+    margin: 20px auto;
+    width: 95%;
+    max-width: 1200px;
 }
 
 .filter-options {

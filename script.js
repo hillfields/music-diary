@@ -169,7 +169,10 @@ function showPreview(url, event) {
   
   // Position the preview to the left of the song titles
   const rect = event.target.getBoundingClientRect();
-  previewElement.style.left = (rect.left - 365) + 'px';
+  const offset = url.includes("youtu.be") ? 365
+               : url.includes("spotify") || url.includes("soundcloud") ? 265
+               : 275;
+  previewElement.style.left = (rect.left - offset) + 'px';
   previewElement.style.top = rect.top + 'px';
   
   document.body.appendChild(previewElement);
@@ -272,7 +275,6 @@ function getSpotifyPreview(url, previewElement) {
 function getSoundCloudPreview(url, previewElement) {
   // Get artwork from SoundCloud
   const oembedUrl = `https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(url)}`;
-  console.log(encodeURIComponent(oembedUrl));
   
   fetch(oembedUrl)
     .then(response => response.json())
