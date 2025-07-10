@@ -1,4 +1,6 @@
 let previewElement = null;
+let currentSortColumn = -1;
+let currentSortDirection = 1; // 1 for ascending, -1 for descending
 const URL = "https://music-diary-1573b-default-rtdb.firebaseio.com/data/main.json";
 
 function showInfo() {
@@ -39,10 +41,10 @@ function createTable(data) {
   // Headings
   let html = "";
   html += "<tr>";
-  html += "<th>Date</th>";
-  html += "<th>Tags</th>";
-  html += "<th>Artist</th>";
-  html += "<th>Song</th>";
+  html += "<th onclick='sortTable(0)'>Date ▼</th>";
+  html += "<th onclick='sortTable(1)'>Tags ▼</th>";
+  html += "<th onclick='sortTable(2)'>Artist ▼</th>";
+  html += "<th onclick='sortTable(3)'>Song ▼</th>";
 
   // Rows
   data.forEach((song, index) => {
@@ -58,6 +60,56 @@ function createTable(data) {
   table.innerHTML = html;
 
   addPreviewEvents();
+}
+
+function sortTable(columnIndex) {
+  const table = document.getElementById("music-table");
+  const rows = Array.from(table.querySelectorAll("tr")).slice(1); // Skip header row
+  
+  // Determine sort direction
+  if (currentSortColumn == columnIndex) {
+    currentSortDirection *= -1; // Reverse direction
+  } else {
+    currentSortColumn = columnIndex;
+    currentSortDirection = 1; // Start with ascending
+  }
+  
+  // Sort the rows
+  rows.sort((a, b) => {
+    const aValue = a.cells[columnIndex].textContent.trim();
+    const bValue = b.cells[columnIndex].textContent.trim();
+    
+    // Handle date sorting
+    if (columnIndex == 0) {
+      const aDate = new Date(aValue);
+      const bDate = new Date(bValue);
+      return (aDate - bDate) * currentSortDirection;
+    }
+    
+    // Handle regular text sorting
+    return aValue.localeCompare(bValue) * currentSortDirection;
+  });
+  
+  // Update the table
+  rows.forEach(row => table.appendChild(row));
+  
+  // Update header arrows
+  updateSortArrows(columnIndex, currentSortDirection);
+}
+
+function updateSortArrows(columnIndex, direction) {
+  const table = document.getElementById("music-table");
+  const headers = table.querySelectorAll("th");
+  
+  headers.forEach((header, index) => {
+    const baseText = header.textContent.replace(/[▲▼]/g, '').trim();
+    if (index == columnIndex) {
+      const triangle = direction == 1 ? ' ▲' : ' ▼';
+      header.textContent = baseText + triangle;
+    } else {
+      header.textContent = baseText + ' ▼';
+    }
+  });
 }
 
 function filterRows(tag) {

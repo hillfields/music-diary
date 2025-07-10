@@ -186,6 +186,10 @@ table {
     table-layout: fixed;
 }
 
+th {
+    cursor: pointer;
+}
+
 th, td {
     border: 1px solid #ccc;
     padding: 6px 12px;
