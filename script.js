@@ -128,6 +128,8 @@ function filterRows(tag) {
     activeButton.classList.add("active");
   }
   
+  let visibleCount = 0;
+  
   rows.forEach((row, index) => {
     // Skip header row
     if (index == 0) return;
@@ -140,10 +142,15 @@ function filterRows(tag) {
     
     if (tag === "All" || tagList.includes(tag)) {
       row.style.display = "";
+      visibleCount++;
     } else {
       row.style.display = "none";
     }
   })
+  
+  // Update results counter
+  const resultsCounter = document.getElementById("results-counter");
+  resultsCounter.textContent = `Returned ${visibleCount} result${visibleCount !== 1 ? 's' : ''}`;
 }
 
 function showRandomSong() {
@@ -184,10 +191,13 @@ function searchTable() {
   const searchTerm = searchInput.value.toLowerCase().trim();
   const table = document.getElementById("music-table");
   const rows = table.querySelectorAll("tr");
+  const resultsCounter = document.getElementById("results-counter");
   
   // Get current active tag filter
   const activeButton = document.querySelector(".filter-button.active");
   const currentFilter = activeButton ? activeButton.textContent : "All";
+  
+  let visibleCount = 0;
   
   // Skip header row
   for (let i = 1; i < rows.length; i++) {
@@ -213,9 +223,17 @@ function searchTable() {
       const shouldShowByTag = currentFilter === "All" || tagList.includes(currentFilter);
       
       // Show row if it matches search AND should be visible by tag filter
-      row.style.display = (matches && shouldShowByTag) ? "" : "none";
+      const isVisible = matches && shouldShowByTag;
+      row.style.display = isVisible ? "" : "none";
+      
+      if (isVisible) {
+        visibleCount++;
+      }
     }
   }
+  
+  // Update results counter
+  resultsCounter.textContent = `Returned ${visibleCount} result${visibleCount !== 1 ? 's' : ''}`;
 }
 
 function addPreviewEvents() {
@@ -391,6 +409,11 @@ fetch(URL)
   .then((arr) => {
     const data = arr.slice(1).reverse();
     createTable(data);
+    // Update results counter after table is created
+    const resultsCounter = document.getElementById("results-counter");
+    const table = document.getElementById("music-table");
+    const visibleRows = table.querySelectorAll("tr").length - 1; // Subtract header row
+    resultsCounter.textContent = `Returned ${visibleRows} result${visibleRows !== 1 ? 's' : ''}`;
   })
   .catch((err) => console.error("Error loading sheet:", err));
 

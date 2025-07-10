@@ -158,6 +158,12 @@ button {
     color: #999;
 }
 
+#results-counter {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #666;
+}
+
 .filter-options {
     display: flex;
     flex-wrap: wrap;
