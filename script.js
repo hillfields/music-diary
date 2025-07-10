@@ -100,12 +100,7 @@ function showRandomSong() {
     // Skip header row and hidden rows
     return index > 0 && row.style.display !== "none";
   });
-  
-  if (visibleRows.length === 0) {
-    alert("No songs available to select from!");
-    return;
-  }
-  
+
   // Remove previous random highlighting
   table.querySelectorAll("tr").forEach(row => {
     row.classList.remove("random-highlight", "fade-out");
@@ -130,6 +125,45 @@ function showRandomSong() {
   setTimeout(() => {
     randomRow.classList.remove("random-highlight", "fade-out");
   }, 2500);
+}
+
+function searchTable() {
+  const searchInput = document.getElementById("search-input");
+  const searchTerm = searchInput.value.toLowerCase().trim();
+  const table = document.getElementById("music-table");
+  const rows = table.querySelectorAll("tr");
+  
+  // Get current active tag filter
+  const activeButton = document.querySelector(".filter-button.active");
+  const currentFilter = activeButton ? activeButton.textContent : "All";
+  
+  // Skip header row
+  for (let i = 1; i < rows.length; i++) {
+    const row = rows[i];
+    const cells = row.querySelectorAll("td");
+    
+    if (cells.length >= 4) {
+      const date = cells[0].textContent.toLowerCase();
+      const tags = cells[1].textContent.toLowerCase();
+      const artist = cells[2].textContent.toLowerCase();
+      const song = cells[3].textContent.toLowerCase();
+      
+      // Check if search term matches any of the fields
+      const matches = date.includes(searchTerm) || 
+                      tags.includes(searchTerm) || 
+                      artist.includes(searchTerm) || 
+                      song.includes(searchTerm);
+      
+      // Check if row should be visible based on tag filter
+      const tagCell = cells[1];
+      const allTags = tagCell.textContent;
+      const tagList = allTags.split(",").map(t => t.trim());
+      const shouldShowByTag = currentFilter === "All" || tagList.includes(currentFilter);
+      
+      // Show row if it matches search AND should be visible by tag filter
+      row.style.display = (matches && shouldShowByTag) ? "" : "none";
+    }
+  }
 }
 
 function addPreviewEvents() {
@@ -310,6 +344,12 @@ fetch(URL)
 
 // Add keyboard event listener for 'r', 't', and 'b' keys
 document.addEventListener('keydown', function(event) {
+  // Don't activate shortcuts if user is using search bar
+  const searchInput = document.getElementById('search-input');
+  if (searchInput && document.activeElement === searchInput) {
+    return;
+  }
+  
   const key = event.key.toLowerCase();
   if (key === 'r') {
     showRandomSong();

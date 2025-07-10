@@ -1,5 +1,5 @@
 body, button {
-    font-family: "Comfortaa";
+    font-family: "Comfortaa", sans-serif;
 }
 
 .comfortaa-font {
@@ -122,6 +122,32 @@ button {
     margin: 20px auto;
     width: 95%;
     max-width: 1200px;
+}
+
+#search-container {
+    margin: -5px auto 20px auto;
+    width: 95%;
+    text-align: center;
+}
+
+#search-input {
+    width: 100%;
+    max-width: 250px;
+    padding: 10px 15px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: "Comfortaa", sans-serif;
+    transition: border-color 0.2s ease;
+}
+
+#search-input:focus {
+    outline: none;
+    border-color: #21b799;
+}
+
+#search-input::placeholder {
+    color: #999;
 }
 
 .filter-options {
