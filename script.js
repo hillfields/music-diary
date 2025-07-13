@@ -278,8 +278,29 @@ function showPreview(url, event) {
   const offset = url.includes("youtu.be") ? 365
                : url.includes("spotify") || url.includes("soundcloud") ? 265
                : 275;
-  previewElement.style.left = (rect.left - offset) + 'px';
-  previewElement.style.top = rect.top + 'px';
+  
+  let left = rect.left - offset;
+  let top = rect.top;
+  
+  // Check if preview would go off the left edge
+  if (left < 10) {
+    left = 10;
+  }
+  
+  // Check if preview would go off the bottom edge
+  const previewHeight = 220; // max-height from CSS
+  const viewportHeight = window.innerHeight;
+  if (top + previewHeight > viewportHeight - 10) {
+    top = viewportHeight - previewHeight - 10;
+  }
+  
+  // Check if preview would go off the top edge
+  if (top < 10) {
+    top = 10;
+  }
+  
+  previewElement.style.left = left + 'px';
+  previewElement.style.top = top + 'px';
   
   document.body.appendChild(previewElement);
   
