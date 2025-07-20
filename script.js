@@ -555,9 +555,9 @@ function hideRecentSong() {
   const modal = document.getElementById('recent-song-modal');
   modal.style.display = 'none';
   
-  // Stop any playing media
-  const iframe = document.querySelector('#recent-song-player iframe');
-  if (iframe) {
-    iframe.src = iframe.src; // Reload iframe to stop playback
+  // Stop any playing media by clearing the iframe content
+  const playerContainer = document.getElementById('recent-song-player');
+  if (playerContainer) {
+    playerContainer.innerHTML = '<div class="loading">Loading player...</div>';
   }
 }
