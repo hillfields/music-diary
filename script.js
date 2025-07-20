@@ -1,6 +1,7 @@
 let previewElement = null;
 let currentSortColumn = -1;
 let currentSortDirection = 1; // 1 for ascending, -1 for descending
+let songData = [];            // Store the song data globally
 const URL = "https://music-diary-1573b-default-rtdb.firebaseio.com/data/main.json";
 
 function showInfo() {
@@ -15,9 +16,15 @@ function hideInfo() {
 
 // Close modal when clicking outside of it
 window.onclick = function(event) {
-  const modal = document.getElementById('info-modal');
-  if (event.target === modal) {
+  const infoModal = document.getElementById('info-modal');
+  const recentSongModal = document.getElementById('recent-song-modal');
+  
+  if (event.target === infoModal) {
     hideInfo();
+  }
+  
+  if (event.target === recentSongModal) {
+    hideRecentSong();
   }
 }
 
@@ -53,7 +60,7 @@ function createTable(data) {
     html += `<td>${song["Date"].split("T")[0]}</td>`;
     html += `<td>${song["Tags"]}</td>`;
     html += `<td>${song["Artist"]}</td>`;
-    html += `<td>${icon} <a href=${song["Link"]} target="_blank" class="preview-link" data-url="${song["Link"]}">${song["Song"]}</a></td>`;
+    html += `<td>${icon} <a href="#" onclick="showSongInPopup(${index}); return false;" class="preview-link" data-url="${song["Link"]}">${song["Song"]}</a></td>`;
     html += "</tr>";
   })
 
@@ -368,9 +375,8 @@ function getYouTubePreview(url, previewElement) {
 }
 
 function extractYouTubeId(url) {
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-  const match = url.match(regExp);
-  return (match && match[2].length === 11) ? match[2] : null;
+  const match = url.match(/youtu\.be\/([^&\n?#]+)/);
+  return match ? match[1] : null;
 }
 
 function getSpotifyPreview(url, previewElement) {
@@ -428,13 +434,24 @@ function getSoundCloudPreview(url, previewElement) {
 fetch(URL)
   .then((res) => res.json())
   .then((arr) => {
-    const data = arr.slice(1).reverse();
-    createTable(data);
+    songData = arr.slice(1).reverse(); // Store data globally
+    createTable(songData);
     // Update results counter after table is created
     const resultsCounter = document.getElementById("results-counter");
     const table = document.getElementById("music-table");
     const visibleRows = table.querySelectorAll("tr").length - 1; // Subtract header row
     resultsCounter.textContent = `Returned ${visibleRows} result${visibleRows !== 1 ? 's' : ''}`;
+    
+    // Show recent song popup automatically once per day
+    const lastVisitDate = localStorage.getItem('lastVisitDate');
+    const today = new Date().toDateString();
+    
+    if (lastVisitDate !== today) {
+      setTimeout(() => {
+        showRecentSong();
+        localStorage.setItem('lastVisitDate', today);
+      }, 1000); // Wait 1 second for page to load
+    }
   })
   .catch((err) => console.error("Error loading sheet:", err));
 
@@ -455,3 +472,92 @@ document.addEventListener('keydown', function(event) {
     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
   }
 });
+
+function showSongInPopup(songIndex) {
+  if (songData.length == 0) {
+    alert("No songs available!");
+    return;
+  }
+  
+  const song = songData[songIndex];
+  showSongInModal(song);
+}
+
+function showRecentSong() {
+  showSongInPopup(0);
+}
+
+function showSongInModal(song) {
+  const modal = document.getElementById('recent-song-modal');
+  
+  // Update modal content
+  document.getElementById('recent-song-date').textContent = song.Date.split('T')[0];
+  document.getElementById('recent-song-title').textContent = `${song.Artist} - ${song.Song}`;
+  
+  // Create player based on link type
+  const playerContainer = document.getElementById('recent-song-player');
+  const url = song.Link;
+  
+  if (url.includes('youtube.com') || url.includes('youtu.be')) {
+    const videoId = extractYouTubeId(url);
+    const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+    playerContainer.innerHTML = `
+      <iframe
+        width="560"
+        height="315"
+        src="${embedUrl}"
+        title="YouTube video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen>
+      </iframe>
+    `;
+  } else if (url.includes('open.spotify.com')) {
+    // Spotify embed
+    const spotifyId = url.split('/').pop().split('?')[0];
+    playerContainer.innerHTML = `
+      <iframe 
+        style="border-radius:12px" 
+        src="https://open.spotify.com/embed/track/${spotifyId}?utm_source=generator" 
+        width="100%" 
+        height="352" 
+        frameborder="0" 
+        allowfullscreen="" 
+        allow="autoplay; clipboard-write; encrypted-media; fullscxreen; picture-in-picture" 
+        loading="lazy">
+      </iframe>
+    `;
+  // } else if (url.includes('soundcloud.com')) {
+  //   // SoundCloud embed
+  //   playerContainer.innerHTML = `
+  //     <iframe
+  //       width="100%"
+  //       height="300"
+  //       scrolling="no"
+  //       frameborder="no"
+  //       allow="autoplay"
+  //       src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/317597045&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true">
+  //     </iframe>
+  //   `;
+  } else {
+    playerContainer.innerHTML = `
+      <div class="loading">
+        <p>No embedded player available for this link type.</p>
+        <a href="${url}" target="_blank" class="button">Open in new tab</a>
+      </div>
+    `;
+  }
+  
+  modal.style.display = 'block';
+}
+
+function hideRecentSong() {
+  const modal = document.getElementById('recent-song-modal');
+  modal.style.display = 'none';
+  
+  // Stop any playing media
+  const iframe = document.querySelector('#recent-song-player iframe');
+  if (iframe) {
+    iframe.src = iframe.src; // Reload iframe to stop playback
+  }
+}
