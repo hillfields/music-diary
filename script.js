@@ -442,14 +442,14 @@ fetch(URL)
     const visibleRows = table.querySelectorAll("tr").length - 1; // Subtract header row
     resultsCounter.textContent = `Returned ${visibleRows} result${visibleRows !== 1 ? 's' : ''}`;
     
-    // Show recent song popup automatically once per day
+    // Show recent song popup if user hasn't seen the most recent song
     const lastVisitDate = localStorage.getItem('lastVisitDate');
-    const today = new Date().toDateString();
+    const mostRecentSongDate = songData[0] ? songData[0].Date.split('T')[0] : null;
     
-    if (lastVisitDate !== today) {
+    if (lastVisitDate !== mostRecentSongDate) {
       setTimeout(() => {
         showRecentSong();
-        localStorage.setItem('lastVisitDate', today);
+        localStorage.setItem('lastVisitDate', mostRecentSongDate);
       }, 1000); // Wait 1 second for page to load
     }
   })
@@ -523,7 +523,7 @@ function showSongInModal(song) {
         height="352" 
         frameborder="0" 
         allowfullscreen="" 
-        allow="autoplay; clipboard-write; encrypted-media; fullscxreen; picture-in-picture" 
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
         loading="lazy">
       </iframe>
     `;
