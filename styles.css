@@ -46,14 +46,17 @@ body, button {
 .modal-content {
     font-size: 11pt;
     background-color: white;
-    margin: 5% auto;
+    margin: 0;
     padding: 30px;
     border-radius: 8px;
     width: 80%;
     max-width: 1000px;
     max-height: 80vh;
     overflow-y: auto;
-    position: relative;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 p {
