@@ -500,7 +500,7 @@ function showSongInModal(song) {
   
   if (url.includes('youtube.com') || url.includes('youtu.be')) {
     const videoId = extractYouTubeId(url);
-    const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+    const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
     playerContainer.innerHTML = `
       <iframe
         width="560"
