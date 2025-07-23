@@ -4,6 +4,10 @@ let currentSortDirection = 1; // 1 for ascending, -1 for descending
 let songData = [];            // Store the song data globally
 const URL = "https://music-diary-1573b-default-rtdb.firebaseio.com/data/main.json";
 
+// Track the current visible song indices and current index for preview navigation
+let currentPreviewIndices = [];
+let currentPreviewIndex = 0;
+
 function showInfo() {
   const modal = document.getElementById('info-modal');
   modal.style.display = 'block';
@@ -473,15 +477,62 @@ document.addEventListener('keydown', function(event) {
   }
 });
 
+function getVisibleSongIndices() {
+  const table = document.getElementById("music-table");
+  const rows = table.querySelectorAll("tr");
+  let indices = [];
+  for (let i = 1; i < rows.length; i++) {
+    if (rows[i].style.display !== "none") {
+      indices.push(i - 1); // -1 because songData is 0-based
+    }
+  }
+  return indices;
+}
+
 function showSongInPopup(songIndex) {
   if (songData.length == 0) {
     alert("No songs available!");
     return;
   }
-  
-  const song = songData[songIndex];
-  showSongInModal(song);
+  // Update visible indices and current index
+  currentPreviewIndices = getVisibleSongIndices();
+  currentPreviewIndex = currentPreviewIndices.indexOf(songIndex);
+  if (currentPreviewIndex == -1) {
+    // fallback: show first visible
+    currentPreviewIndex = 0;
+  }
+  showSongInModal(songData[currentPreviewIndices[currentPreviewIndex]]);
+  updatePreviewArrows();
 }
+
+function navigateSongPreview(direction) {
+  if (!currentPreviewIndices.length) return;
+  let newIndex = currentPreviewIndex + direction;
+  if (newIndex < 0 || newIndex >= currentPreviewIndices.length) return;
+  currentPreviewIndex = newIndex;
+  showSongInModal(songData[currentPreviewIndices[currentPreviewIndex]]);
+  updatePreviewArrows();
+}
+
+function updatePreviewArrows() {
+  const leftBtn = document.getElementById('preview-arrow-left');
+  const rightBtn = document.getElementById('preview-arrow-right');
+  if (!leftBtn || !rightBtn) return;
+  leftBtn.disabled = (currentPreviewIndex <= 0);
+  rightBtn.disabled = (currentPreviewIndex >= currentPreviewIndices.length - 1);
+}
+
+// Optionally: Keyboard navigation for popup
+window.addEventListener('keydown', function(e) {
+  const modal = document.getElementById('recent-song-modal');
+  if (modal && modal.style.display === 'block') {
+    if (e.key === 'ArrowLeft') {
+      navigateSongPreview(-1);
+    } else if (e.key === 'ArrowRight') {
+      navigateSongPreview(1);
+    }
+  }
+});
 
 function showRecentSong() {
   showSongInPopup(0);

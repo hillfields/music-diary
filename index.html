@@ -65,7 +65,11 @@
       <div class="modal-content recent-song-content">
         <span class="close" onclick="hideRecentSong()">&times;</span>
         <div class="recent-song-info">
-          <h2 id="recent-song-date">Loading...</h2>
+          <div class="preview-date-arrows">
+            <button id="preview-arrow-left" class="arrow-btn" onclick="navigateSongPreview(-1)"><i class="fa fa-chevron-left"></i></button>
+            <h2 id="recent-song-date">Loading...</h2>
+            <button id="preview-arrow-right" class="arrow-btn" onclick="navigateSongPreview(1)"><i class="fa fa-chevron-right"></i></button>
+          </div>
           <p id="recent-song-title">Loading...</p>
         </div>
         <div id="recent-song-player">
