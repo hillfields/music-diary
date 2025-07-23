@@ -590,6 +590,20 @@ function showSongInModal(song) {
       });
     }
     createYT();
+  } else if (url.includes('bilibili.com')) {
+    playerContainer.innerHTML = `        
+      <iframe 
+        src=${url}
+        scrolling="no"
+        border="0"
+        width="560"
+        height="315"
+        frameborder="0"
+        framespacing="0"
+        allowfullscreen>
+      </iframe>
+    `;
+    if (ytPlayer) { ytPlayer.destroy(); ytPlayer = null; }
   } else if (url.includes('open.spotify.com')) {
     const spotifyId = url.split('/').pop().split('?')[0];
     playerContainer.innerHTML = `
