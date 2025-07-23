@@ -600,6 +600,7 @@ function showSongInModal(song) {
   } else if (url.includes('soundcloud.com')) {
     playerContainer.innerHTML = `
       <iframe
+        id="soundcloud-player"
         width="560"
         height="315"
         scrolling="no"
@@ -609,6 +610,24 @@ function showSongInModal(song) {
       </iframe>
     `;
     if (ytPlayer) { ytPlayer.destroy(); ytPlayer = null; }
+    // SoundCloud autoplay-next logic
+    // Unbind and clear previous widget
+    if (window._soundcloudWidget) {
+      try {
+        window._soundcloudWidget.unbind && window._soundcloudWidget.unbind(SC.Widget.Events.FINISH);
+      } catch (e) {}
+      window._soundcloudWidget = null;
+    }
+    setTimeout(() => {
+      const iframe = document.getElementById('soundcloud-player');
+      if (iframe && window.SC && SC.Widget) {
+        const widget = SC.Widget(iframe);
+        window._soundcloudWidget = widget;
+        widget.bind(SC.Widget.Events.FINISH, function() {
+          navigateSongPreview(1);
+        });
+      }
+    }, 500);
   } else if (url.includes('bilibili.com')) {
     playerContainer.innerHTML = `        
       <iframe 
