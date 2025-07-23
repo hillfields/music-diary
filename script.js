@@ -597,6 +597,18 @@ function showSongInModal(song) {
       });
     }
     createYT();
+  } else if (url.includes('soundcloud.com')) {
+    playerContainer.innerHTML = `
+      <iframe
+        width="560"
+        height="315"
+        scrolling="no"
+        frameborder="no"
+        allow="autoplay"
+        src="https://w.soundcloud.com/player/?url=${url}&color=%2321b799&auto_play=true&visual=true">
+      </iframe>
+    `;
+    if (ytPlayer) { ytPlayer.destroy(); ytPlayer = null; }
   } else if (url.includes('bilibili.com')) {
     playerContainer.innerHTML = `        
       <iframe 
