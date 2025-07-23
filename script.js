@@ -493,7 +493,14 @@ function getVisibleSongIndices() {
   let indices = [];
   for (let i = 1; i < rows.length; i++) {
     if (rows[i].style.display !== "none") {
-      indices.push(i - 1); // -1 because songData is 0-based
+      // Extract the song index from the preview link's onclick attribute
+      const link = rows[i].querySelector(".preview-link");
+      if (link) {
+        const match = link.getAttribute("onclick").match(/showSongInPopup\((\d+)\)/);
+        if (match) {
+          indices.push(parseInt(match[1], 10));
+        }
+      }
     }
   }
   return indices;
