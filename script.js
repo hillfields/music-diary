@@ -8,6 +8,16 @@ const URL = "https://music-diary-1573b-default-rtdb.firebaseio.com/data/main.jso
 let currentPreviewIndices = [];
 let currentPreviewIndex = 0;
 
+// For YouTube API player
+let ytPlayer = null;
+let ytPlayerReady = false;
+let ytPlayerSongId = null;
+
+// Called by YouTube API when ready
+function onYouTubeIframeAPIReady() {
+  ytPlayerReady = true;
+}
+
 function showInfo() {
   const modal = document.getElementById('info-modal');
   modal.style.display = 'block';
@@ -549,22 +559,38 @@ function showSongInModal(song) {
   const playerContainer = document.getElementById('recent-song-player');
   const url = song.Link;
   
+  // YouTube
   if (url.includes('youtube.com') || url.includes('youtu.be')) {
     const videoId = extractYouTubeId(url);
-    const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-    playerContainer.innerHTML = `
-      <iframe
-        width="560"
-        height="315"
-        src="${embedUrl}"
-        title="YouTube video player"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"
-        allowfullscreen>
-      </iframe>
-    `;
+    ytPlayerSongId = videoId;
+    playerContainer.innerHTML = `<div id="yt-player"></div>`;
+    // Wait for API to be ready
+    function createYT() {
+      if (typeof YT === 'undefined' || typeof YT.Player === 'undefined') {
+        setTimeout(createYT, 100);
+        return;
+      }
+      if (ytPlayer) {
+        ytPlayer.destroy();
+        ytPlayer = null;
+      }
+      ytPlayer = new YT.Player('yt-player', {
+        height: '315',
+        width: '560',
+        videoId: videoId,
+        playerVars: { autoplay: 1 },
+        events: {
+          'onStateChange': function(event) {
+            if (event.data === YT.PlayerState.ENDED) {
+              // Auto-next
+              navigateSongPreview(1);
+            }
+          }
+        }
+      });
+    }
+    createYT();
   } else if (url.includes('open.spotify.com')) {
-    // Spotify embed
     const spotifyId = url.split('/').pop().split('?')[0];
     playerContainer.innerHTML = `
       <iframe 
@@ -578,18 +604,7 @@ function showSongInModal(song) {
         loading="lazy">
       </iframe>
     `;
-  // } else if (url.includes('soundcloud.com')) {
-  //   // SoundCloud embed
-  //   playerContainer.innerHTML = `
-  //     <iframe
-  //       width="100%"
-  //       height="300"
-  //       scrolling="no"
-  //       frameborder="no"
-  //       allow="autoplay"
-  //       src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/317597045&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true">
-  //     </iframe>
-  //   `;
+    if (ytPlayer) { ytPlayer.destroy(); ytPlayer = null; }
   } else {
     playerContainer.innerHTML = `
       <div class="loading">
@@ -597,6 +612,7 @@ function showSongInModal(song) {
         <a href="${url}" target="_blank" class="button">Open in new tab</a>
       </div>
     `;
+    if (ytPlayer) { ytPlayer.destroy(); ytPlayer = null; }
   }
   
   modal.style.display = 'block';
@@ -610,5 +626,9 @@ function hideRecentSong() {
   const playerContainer = document.getElementById('recent-song-player');
   if (playerContainer) {
     playerContainer.innerHTML = '<div class="loading">Loading player...</div>';
+  }
+  if (ytPlayer) {
+    ytPlayer.destroy();
+    ytPlayer = null;
   }
 }
