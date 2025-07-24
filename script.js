@@ -341,6 +341,8 @@ function getPreviewImage(url, previewElement) {
     getYouTubePreview(url, previewElement);
   } else if (url.includes('open.spotify.com')) {
     getSpotifyPreview(url, previewElement);
+  } else if (url.includes('soundcloud.com')) {
+    getSoundCloudPreview(url, previewElement);
   } else {
     // For other links, show a generic preview
     previewElement.innerHTML = `
@@ -412,6 +414,32 @@ function getSpotifyPreview(url, previewElement) {
       previewElement.innerHTML = `
         <div class="preview-content">
           <div class="preview-fallback">Spotify preview not available</div>
+        </div>
+      `;
+    });
+}
+
+function getSoundCloudPreview(url, previewElement) {
+  // Get artwork from SoundCloud
+  const oembedUrl = `https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(url)}`;
+  
+  fetch(oembedUrl)
+    .then(response => response.json())
+    .then(data => {
+      if (data.thumbnail_url) {
+        previewElement.innerHTML = `
+          <div class="preview-content">
+            <img src="${data.thumbnail_url}" alt="SoundCloud art cover" style="max-width: 300px; max-height: 200px;">
+          </div>
+        `;
+      } else {
+        throw new Error('No art cover available');
+      }
+    })
+    .catch(() => {
+      previewElement.innerHTML = `
+        <div class="preview-content">
+          <div class="preview-fallback">SoundCloud preview not available</div>
         </div>
       `;
     });
