@@ -25,29 +25,14 @@
     <div class="main-content">
       <h1>Music Diary</h1>
 
-      <div id="filter-buttons">
-        <button class="filter-button" onclick="randomizeSongs()">Random</button>
-        <button class="filter-button active" onclick="filterRows('All')">All</button>
-        <button class="filter-button" onclick="filterRows('Favorite')">Favorite</button>
-        <button class="filter-button" onclick="filterRows('Anime')">Anime</button>
-        <button class="filter-button" onclick="filterRows('Game')">Game</button>
-        <button class="filter-button" onclick="filterRows('INST')">INST</button>
-        <button class="filter-button" onclick="filterRows('Piano')">Piano</button>
-        <button class="filter-button" onclick="filterRows('Vocaloid')">Vocaloid</button>
-        <button class="filter-button" onclick="filterRows('CN')">CN</button>
-        <button class="filter-button" onclick="filterRows('EN')">EN</button>
-        <button class="filter-button" onclick="filterRows('IS')">IS</button>
-        <button class="filter-button" onclick="filterRows('JP')">JP</button>
-        <button class="filter-button" onclick="filterRows('KR')">KR</button>
-        <button class="filter-button" onclick="filterRows('SE')">SE</button>
+      <div id="calendar-container">
+        <div id="calendar-navigation">
+          <button id="prev-month" onclick="changeMonth(-1)"><i class="fa fa-chevron-left"></i></button>
+          <h2 id="current-month">Loading...</h2>
+          <button id="next-month" onclick="changeMonth(1)"><i class="fa fa-chevron-right"></i></button>
+        </div>
+        <div id="calendar-grid"></div>
       </div>
-
-      <div id="search-container">
-        <input type="text" id="search-input" placeholder="Search" oninput="searchTable()">
-        <div id="results-counter">Returned 0 results</div>
-      </div>
-
-      <table id="music-table"></table>
     </div>
 
     <div id="info-modal" class="modal">
@@ -59,13 +44,6 @@
           <p>But there is one thing I don't have to force myself to do: listening to music.</p>
           <p>Music is such a wonderful thing. It fills in the long periods of silence during those long rides on the train or in the car. It conveys all sorts of emotions that I have trouble expressing myself. And with the convenience of music streaming platforms, I can listen to whatever I feel like at the moment. Sometimes I'll even put the same song on loop for hours just because I like it that much.</p>
           <p>So then I started to keep a music diary, with the goal of writing down <strong id="highlight">one song a day</strong>. It could be a song that captures a specific moment or just something I happened to find or listen to on that day. I think of these songs as being associated with "core memories" - I can look back at each one and instantly remember what I was doing and how I felt on that day. The songs I choose might not mean anything to someone else, but they mean something to me.</p>
-          
-          <h2 class="text-center">Keyboard Shortcuts</h2>
-          <ul>
-            <li><strong>R</strong> - Randomize the song order in the current table</li>
-            <li><strong>T</strong> - Jump to the top of the page</li>
-            <li><strong>B</strong> - Jump to the bottom of the page</li>
-          </ul>
         </div>
       </div>
     </div>
@@ -88,6 +66,6 @@
     </div>
 
     <script src="scripts/misc.js"></script>
-    <script src="scripts/table.js"></script>
+    <script src="scripts/calendar.js"></script>
   </body>
 </html>
