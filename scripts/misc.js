@@ -292,6 +292,14 @@ function hideRecentSong() {
   }
 }
 
+function showTable() {
+  window.location.href = 'index.html';
+}
+
+function showCalendar() {
+  window.location.href = 'calendar.html';
+}
+
 // Inject shared info modal markup on page load
 window.addEventListener('DOMContentLoaded', function() {
   if (!document.getElementById('info-modal')) {
