@@ -386,32 +386,6 @@ a:active {
   color: #333;
 }
 
-#prev-month, #next-month {
-  background: none;
-  border: none;
-  font-size: 1.2em;
-  color: #666;
-  cursor: pointer;
-  padding: 10px;
-  border-radius: 50%;
-  transition: all 0.2s ease;
-}
-
-#prev-month:hover, #next-month:hover {
-  background-color: #f0f0f0;
-  color: #333;
-}
-
-#prev-month:disabled, #next-month:disabled {
-  color: #ccc;
-  cursor: not-allowed;
-}
-
-#prev-month:disabled:hover, #next-month:disabled:hover {
-  background-color: transparent;
-  color: #ccc;
-}
-
 #calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
