@@ -409,6 +409,9 @@ a:active {
   background: white;
   transition: all 0.2s ease;
   position: relative;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .calendar-day:hover {
@@ -444,6 +447,9 @@ a:active {
   color: #333;
   cursor: pointer;
   transition: color 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .calendar-song:hover {
