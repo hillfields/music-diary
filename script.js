@@ -174,37 +174,31 @@ function filterRows(tag) {
   resultsCounter.textContent = `Returned ${visibleCount} result${visibleCount !== 1 ? 's' : ''}`;
 }
 
-function showRandomSong() {
+function randomizeSongs() {
   const table = document.getElementById("music-table");
-  const visibleRows = Array.from(table.querySelectorAll("tr")).filter((row, index) => {
-    // Skip header row and hidden rows
-    return index > 0 && row.style.display !== "none";
+  const rows = Array.from(table.querySelectorAll("tr"));
+  const dataRows = rows.slice(1); // All data rows
+  
+  // Shuffle the data rows using Fisher-Yates algorithm
+  for (let i = dataRows.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [dataRows[i], dataRows[j]] = [dataRows[j], dataRows[i]];
+  }
+  
+  // Clear the table (except header)
+  while (table.children.length > 1) {
+    table.removeChild(table.lastChild);
+  }
+  
+  // Add shuffled rows back to table
+  dataRows.forEach(row => {
+    table.appendChild(row);
   });
-
-  // Remove previous random highlighting
-  table.querySelectorAll("tr").forEach(row => {
-    row.classList.remove("random-highlight", "fade-out");
-  });
   
-  // Select a random visible row
-  const randomIndex = Math.floor(Math.random() * visibleRows.length);
-  const randomRow = visibleRows[randomIndex];
-  
-  // Highlight the random row
-  randomRow.classList.add("random-highlight");
-  
-  // Scroll to the random row
-  randomRow.scrollIntoView({ behavior: "smooth", block: "center" });
-  
-  // Start fade out after 2 seconds
-  setTimeout(() => {
-    randomRow.classList.add("fade-out");
-  }, 2000);
-  
-  // Remove classes after fade completes
-  setTimeout(() => {
-    randomRow.classList.remove("random-highlight", "fade-out");
-  }, 2500);
+  // Update results counter
+  const visibleRows = dataRows.filter(row => row.style.display !== "none");
+  const resultsCounter = document.getElementById("results-counter");
+  resultsCounter.textContent = `Returned ${visibleRows.length} result${visibleRows.length !== 1 ? 's' : ''}`;
 }
 
 function searchTable() {
@@ -479,7 +473,7 @@ document.addEventListener('keydown', function(event) {
   
   const key = event.key.toLowerCase();
   if (key === 'r') {
-    showRandomSong();
+    randomizeSongs();
   } else if (key === 't') {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   } else if (key === 'b') {

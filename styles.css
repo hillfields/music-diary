@@ -285,17 +285,6 @@ a:active {
     color: #aeada7;
 }
 
-.random-highlight {
-    background-color: #e3f2fd !important;
-    border: 2px solid #2196f3 !important;
-    transition: all 0.5s ease-out;
-}
-
-.random-highlight.fade-out {
-    background-color: white !important;
-    border: 1px solid #ccc !important;
-}
-
 .link-preview {
     position: fixed;
     z-index: 3000;
