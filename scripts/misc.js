@@ -300,6 +300,31 @@ function showCalendar() {
   window.location.href = 'calendar.html';
 }
 
+function animateWave(element) {
+  const text = element.textContent;
+  element.innerHTML = '';
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    const span = document.createElement('span');
+    if (char === ' ') {
+      span.style.width = '0.25em';
+    } else {
+      span.textContent = char;
+      span.style.transition = 'transform 0.1s';
+    }
+    span.style.display = 'inline-block';
+    element.appendChild(span);
+  }
+  const spans = element.querySelectorAll('span');
+  let t = 0;
+  setInterval(() => {
+    t += 0.1;
+    spans.forEach((span, i) => {
+      span.style.transform = `translateY(${Math.sin(t + i * 0.4) * 8}px)`;
+    });
+  }, 40);
+}
+
 // Inject shared info modal markup on page load
 window.addEventListener('DOMContentLoaded', function() {
   if (!document.getElementById('info-modal')) {
@@ -321,5 +346,9 @@ window.addEventListener('DOMContentLoaded', function() {
 
     const recentModal = document.getElementById('recent-song-modal');
     recentModal.parentNode.insertBefore(modal, recentModal);
+  }
+  const h1 = document.querySelector('h1');
+  if (h1) {
+    animateWave(h1);
   }
 });
