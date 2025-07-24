@@ -18,7 +18,7 @@ body, button {
 }
   
 .info-icon {
-    position: fixed;
+    position: absolute;
     top: 24px;
     right: 24px;
     font-size: 1.5rem;
@@ -27,8 +27,40 @@ body, button {
     z-index: 1001;
     transition: color 0.2s;
 }
+
 .info-icon:hover {
     color: #178f6b;
+}
+
+
+.table-icon {
+  position: absolute;
+  top: 64px;
+  right: 24px;
+  font-size: 1.5rem;
+  color: #21b799;
+  cursor: pointer;
+  z-index: 1001;
+  transition: color 0.2s;
+}
+
+.table-icon:hover {
+  color: #178f6b;
+}
+
+.calendar-icon {
+  position: absolute;
+  top: 64px;
+  right: 25.5px;
+  font-size: 1.5rem;
+  color: #21b799;
+  cursor: pointer;
+  z-index: 1001;
+  transition: color 0.2s;
+}
+
+.calendar-icon:hover {
+  color: #178f6b;
 }
 
 .modal {
@@ -362,45 +394,6 @@ a:active {
   background: #e8e8e8;
   border-color: #21b799;
   color: #ff6b6b;
-}
-
-.info-icon {
-  position: fixed;
-  top: 24px;
-  right: 24px;
-  font-size: 1.5rem;
-  color: #21b799;
-  cursor: pointer;
-  z-index: 1001;
-  transition: color 0.2s;
-}
-
-.table-icon {
-  position: fixed;
-  top: 64px; /* 24px (info) + 1.5rem (icon) + gap */
-  right: 24px;
-  font-size: 1.5rem;
-  color: #21b799;
-  cursor: pointer;
-  z-index: 1001;
-  transition: color 0.2s;
-}
-.table-icon:hover {
-  color: #178f6b;
-}
-
-.calendar-icon {
-  position: fixed;
-  top: 64px; /* 24px (info) + 1.5rem (icon) + gap */
-  right: 25.5px;
-  font-size: 1.5rem;
-  color: #21b799;
-  cursor: pointer;
-  z-index: 1001;
-  transition: color 0.2s;
-}
-.calendar-icon:hover {
-  color: #178f6b;
 }
 
 #calendar-container {
