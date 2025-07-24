@@ -277,6 +277,15 @@ th, td {
     word-wrap: break-word;
     word-break: break-word;
     font-size: 11pt;
+    transition: background-color 0.2s ease;
+}
+
+tr:hover td {
+    background-color: #d0fff5;
+}
+
+th:hover {
+    background-color: #aaffee;
 }
 
 th {
@@ -487,7 +496,11 @@ a:active {
 }
 
 .calendar-song:hover {
-  color: #007bff;
+  color: #ff6b6b;
+}
+
+.calendar-song:active {
+  color: #aeada7;
 }
 
 .calendar-song-artist {
