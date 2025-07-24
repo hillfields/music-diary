@@ -10,13 +10,6 @@ let currentPreviewIndex = 0;
 
 // For YouTube API player
 let ytPlayer = null;
-let ytPlayerReady = false;
-let ytPlayerSongId = null;
-
-// Called by YouTube API when ready
-function onYouTubeIframeAPIReady() {
-  ytPlayerReady = true;
-}
 
 function showInfo() {
   const modal = document.getElementById('info-modal');
@@ -566,7 +559,6 @@ function showSongInModal(song) {
   // YouTube
   if (url.includes('youtube.com') || url.includes('youtu.be')) {
     const videoId = extractYouTubeId(url);
-    ytPlayerSongId = videoId;
     playerContainer.innerHTML = `<div id="yt-player"></div>`;
     // Wait for API to be ready
     function createYT() {
