@@ -364,10 +364,21 @@ a:active {
   color: #ff6b6b;
 }
 
-.table-icon {
+.info-icon {
   position: fixed;
   top: 24px;
-  right: 64px;
+  right: 24px;
+  font-size: 1.5rem;
+  color: #21b799;
+  cursor: pointer;
+  z-index: 1001;
+  transition: color 0.2s;
+}
+
+.table-icon {
+  position: fixed;
+  top: 64px; /* 24px (info) + 1.5rem (icon) + gap */
+  right: 24px;
   font-size: 1.5rem;
   color: #21b799;
   cursor: pointer;
@@ -380,8 +391,8 @@ a:active {
 
 .calendar-icon {
   position: fixed;
-  top: 24px;
-  right: 64px;
+  top: 64px; /* 24px (info) + 1.5rem (icon) + gap */
+  right: 25.5px;
   font-size: 1.5rem;
   color: #21b799;
   cursor: pointer;
