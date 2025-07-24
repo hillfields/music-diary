@@ -528,6 +528,9 @@ function showRecentSong() {
 }
 
 function showSongInModal(song) {
+  // Hide any active preview when modal is shown
+  hidePreview();
+  
   const modal = document.getElementById('recent-song-modal');
   
   // Update modal content
