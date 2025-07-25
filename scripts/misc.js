@@ -293,11 +293,11 @@ function hideRecentSong() {
 }
 
 function showTable() {
-  window.location.href = 'index.html';
+  window.location.href = 'table.html';
 }
 
 function showCalendar() {
-  window.location.href = 'calendar.html';
+  window.location.href = 'index.html';
 }
 
 function animateWave(element) {

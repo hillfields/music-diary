@@ -22,20 +22,35 @@
     <div class="info-icon" onclick="showInfo()">
       <i class="fa-solid fa-info-circle"></i>
     </div>
-    <div class="table-icon" onclick="showTable()">
-      <i class="fa-solid fa-table"></i>
+    <div class="calendar-icon" onclick="showCalendar()">
+      <i class="fa-solid fa-calendar"></i>
     </div>
     <div class="main-content">
       <h1>Music Diary</h1>
 
-      <div id="calendar-container">
-        <div id="calendar-navigation">
-          <button id="prev-month" class="arrow-btn" onclick="changeMonth(-1)"><i class="fa fa-chevron-left"></i></button>
-          <h2 id="current-month">Loading...</h2>
-          <button id="next-month" class="arrow-btn" onclick="changeMonth(1)"><i class="fa fa-chevron-right"></i></button>
-        </div>
-        <div id="calendar-grid"></div>
+      <div id="filter-buttons">
+        <button class="filter-button" onclick="randomizeSongs()">Random</button>
+        <button class="filter-button active" onclick="filterRows('All')">All</button>
+        <button class="filter-button" onclick="filterRows('Favorite')">Favorite</button>
+        <button class="filter-button" onclick="filterRows('Anime')">Anime</button>
+        <button class="filter-button" onclick="filterRows('Game')">Game</button>
+        <button class="filter-button" onclick="filterRows('INST')">INST</button>
+        <button class="filter-button" onclick="filterRows('Piano')">Piano</button>
+        <button class="filter-button" onclick="filterRows('Vocaloid')">Vocaloid</button>
+        <button class="filter-button" onclick="filterRows('CN')">CN</button>
+        <button class="filter-button" onclick="filterRows('EN')">EN</button>
+        <button class="filter-button" onclick="filterRows('IS')">IS</button>
+        <button class="filter-button" onclick="filterRows('JP')">JP</button>
+        <button class="filter-button" onclick="filterRows('KR')">KR</button>
+        <button class="filter-button" onclick="filterRows('SE')">SE</button>
       </div>
+
+      <div id="search-container">
+        <input type="text" id="search-input" placeholder="Search" oninput="searchTable()">
+        <div id="results-counter">Returned 0 results</div>
+      </div>
+
+      <table id="music-table"></table>
     </div>
 
     <!-- Info modal will be injected by JS -->
@@ -58,6 +73,6 @@
     </div>
 
     <script src="scripts/misc.js"></script>
-    <script src="scripts/calendar.js"></script>
+    <script src="scripts/table.js"></script>
   </body>
 </html>
