@@ -186,7 +186,8 @@ button {
 }
 
 .filter-button:hover {
-    background-color: #e8e8e8;
+    border: 3px solid #21b799;
+    background-color: #aaffee;
     color: #ff6b6b;
 }
 
@@ -463,7 +464,7 @@ a:active {
 }
 
 .calendar-day.has-song {
-  border: 3px solid #21b799;
+  border: 3px solid #ccc;
   cursor: pointer;
 }
 
