@@ -320,7 +320,7 @@ function animateWave(element) {
   setInterval(() => {
     t += 0.1;
     spans.forEach((span, i) => {
-      span.style.transform = `translateY(${Math.sin(t + i * 0.4) * 8}px)`;
+      span.style.transform = `translateY(${Math.sin(t - i * 0.4) * 8}px)`;
     });
   }, 40);
 }
