@@ -325,8 +325,34 @@ function animateWave(element) {
   }, 40);
 }
 
-// Inject shared info modal markup on page load
+function injectSongPlayer() {
+  if (!document.getElementById('recent-song-modal')) {
+    const modal = document.createElement('div');
+    modal.id = 'recent-song-modal';
+    modal.className = 'modal';
+    modal.innerHTML = `
+      <div class="modal-content recent-song-content">
+        <span class="close" onclick="hideRecentSong()">&times;</span>
+        <div class="recent-song-info">
+          <div class="preview-date-arrows">
+            <button id="preview-arrow-left" class="arrow-btn" onclick="navigateSongPreview(-1)"><i class="fa fa-caret-left"></i></button>
+            <h2 id="recent-song-date">Loading...</h2>
+            <button id="preview-arrow-right" class="arrow-btn" onclick="navigateSongPreview(1)"><i class="fa fa-caret-right"></i></button>
+          </div>
+          <p id="recent-song-title">Loading...</p>
+        </div>
+        <div id="recent-song-player">
+          <div class="loading">Loading player...</div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+}
+
+// Inject shared components on page load
 window.addEventListener('DOMContentLoaded', function() {
+  // Inject info modal
   if (!document.getElementById('info-modal')) {
     const modal = document.createElement('div');
     modal.id = 'info-modal';
@@ -343,10 +369,12 @@ window.addEventListener('DOMContentLoaded', function() {
         </div>
       </div>
     `;
-
-    const recentModal = document.getElementById('recent-song-modal');
-    recentModal.parentNode.insertBefore(modal, recentModal);
+    document.body.appendChild(modal);
   }
+  
+  // Inject song player
+  injectSongPlayer();
+  
   const h1 = document.querySelector('h1');
   if (h1) {
     animateWave(h1);
