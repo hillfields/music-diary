@@ -30,9 +30,15 @@
 
       <div id="calendar-container">
         <div id="calendar-navigation">
-          <button id="prev-month" class="arrow-btn" onclick="changeMonth(-1)"><i class="fa fa-chevron-left"></i></button>
+          <div class="left-buttons">
+            <button id="earliest-month" class="arrow-btn" onclick="jumpToEarliestMonth()" title="Jump to earliest month"><i class="fa fa-backward"></i></button>
+            <button id="prev-month" class="arrow-btn" onclick="changeMonth(-1)" title="Previous month"><i class="fa fa-caret-left"></i></button>
+          </div>
           <h2 id="current-month">Loading...</h2>
-          <button id="next-month" class="arrow-btn" onclick="changeMonth(1)"><i class="fa fa-chevron-right"></i></button>
+          <div class="right-buttons">
+            <button id="next-month" class="arrow-btn" onclick="changeMonth(1)" title="Next month"><i class="fa fa-caret-right"></i></button>
+            <button id="latest-month" class="arrow-btn" onclick="jumpToLatestMonth()" title="Jump to latest month"><i class="fa fa-forward"></i></button>
+          </div>
         </div>
         <div id="calendar-grid"></div>
       </div>
@@ -45,9 +51,9 @@
         <span class="close" onclick="hideRecentSong()">&times;</span>
         <div class="recent-song-info">
           <div class="preview-date-arrows">
-            <button id="preview-arrow-left" class="arrow-btn" onclick="navigateSongPreview(-1)"><i class="fa fa-chevron-left"></i></button>
+            <button id="preview-arrow-left" class="arrow-btn" onclick="navigateSongPreview(-1)"><i class="fa fa-caret-left"></i></button>
             <h2 id="recent-song-date">Loading...</h2>
-            <button id="preview-arrow-right" class="arrow-btn" onclick="navigateSongPreview(1)"><i class="fa fa-chevron-right"></i></button>
+            <button id="preview-arrow-right" class="arrow-btn" onclick="navigateSongPreview(1)"><i class="fa fa-caret-right"></i></button>
           </div>
           <p id="recent-song-title">Loading...</p>
         </div>

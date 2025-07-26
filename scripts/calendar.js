@@ -197,12 +197,32 @@ function changeMonth(direction) {
 function updateMonthNavigationButtons() {
   const prevBtn = document.getElementById('prev-month');
   const nextBtn = document.getElementById('next-month');
+  const earliestBtn = document.getElementById('earliest-month');
+  const latestBtn = document.getElementById('latest-month');
   if (!prevBtn || !nextBtn || earliestMonth === null || latestMonth === null) return;
   const currentDate = new Date(currentYear, currentMonth);
   const earliestDate = new Date(earliestYear, earliestMonth);
   const latestDate = new Date(latestYear, latestMonth);
   prevBtn.disabled = currentDate <= earliestDate;
   nextBtn.disabled = currentDate >= latestDate;
+  if (earliestBtn) earliestBtn.disabled = currentDate <= earliestDate;
+  if (latestBtn) latestBtn.disabled = currentDate >= latestDate;
+}
+
+function jumpToEarliestMonth() {
+  if (earliestMonth !== null && earliestYear !== null) {
+    currentMonth = earliestMonth;
+    currentYear = earliestYear;
+    renderCalendar();
+  }
+}
+
+function jumpToLatestMonth() {
+  if (latestMonth !== null && latestYear !== null) {
+    currentMonth = latestMonth;
+    currentYear = latestYear;
+    renderCalendar();
+  }
 }
 
 // Calendar-specific keyboard shortcuts (month navigation)

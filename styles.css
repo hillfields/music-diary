@@ -396,6 +396,11 @@ a:active {
   transition: background 0.2s, border-color 0.2s, color 0.2s;
 }
 
+.arrow-btn .fa-caret-left,
+.arrow-btn .fa-caret-right {
+  font-size: 24px;
+}
+
 .arrow-btn:disabled {
   color: #ccc;
   border-color: #eee;
@@ -421,7 +426,13 @@ a:active {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  padding: 0 20px;
+  padding: 0;
+}
+
+#calendar-navigation .left-buttons,
+#calendar-navigation .right-buttons {
+  display: flex;
+  gap: 4px;
 }
 
 #calendar-navigation h2 {
