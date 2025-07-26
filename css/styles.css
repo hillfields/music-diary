@@ -574,6 +574,14 @@ a:active {
   
   .calendar-song {
     font-size: 0.65em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+    white-space: normal;
   }
   
   .calendar-song-artist {
@@ -592,7 +600,7 @@ a:active {
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 800px) {
   #calendar-grid {
     grid-template-columns: repeat(7, 1fr);
     gap: 2px;
@@ -609,6 +617,14 @@ a:active {
   
   .calendar-song {
     font-size: 0.6em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+    white-space: normal;
   }
   
   .calendar-song-artist {
@@ -620,5 +636,9 @@ a:active {
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.2;
+  }
+  
+  .calendar-song-icon {
+    display: none;
   }
 }
